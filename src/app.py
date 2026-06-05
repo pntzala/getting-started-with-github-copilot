@@ -47,6 +47,13 @@ def root():
     return RedirectResponse(url="/static/index.html")
 
 
+def is_valid_email(email: str) -> bool:
+    if not email or "@" not in email:
+        return False
+    local_part, _, domain = email.partition("@")
+    return bool(local_part) and bool(domain) and "." in domain
+
+
 @app.get("/activities")
 def get_activities():
     return activities
@@ -55,12 +62,21 @@ def get_activities():
 @app.post("/activities/{activity_name}/signup")
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
+    if not is_valid_email(email):
+        raise HTTPException(status_code=400, detail="Please provide a valid email address")
+
     # Validate activity exists
     if activity_name not in activities:
         raise HTTPException(status_code=404, detail="Activity not found")
 
     # Get the specific activity
     activity = activities[activity_name]
+
+    if len(activity["participants"]) >= activity["max_participants"]:
+        raise HTTPException(status_code=400, detail=f"Activity '{activity_name}' is full")
+
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail=f"{email} is already signed up for {activity_name}")
 
     # Add student
     activity["participants"].append(email)
