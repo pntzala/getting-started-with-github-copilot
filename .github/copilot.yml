@@ -1,0 +1,9 @@
+# GitHub Copilot repository-wide custom instructions
+about:
+  - "This repository is a simple FastAPI backend with a static frontend for student activity signups."
+  - "The backend code lives in src/app.py and the frontend lives in src/static/index.html and src/static/app.js."
+  - "Keep all changes small, practical, and compatible with Python 3.13 and vanilla JavaScript."
+response:
+  - "Provide concise, actionable code edits and explanations."
+  - "When suggesting changes, reference the exact file names and keep the format easy to follow."
+  - "Prefer bullet points and short examples."
